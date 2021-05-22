@@ -15,10 +15,6 @@ exports.getAllSupports = catchAsync(async (req, res, next) => {
 exports.addNewSupport = catchAsync(async (req, res, next) => {
    const newSupport = await Support.create(req.body);
 
-   if (!newSupport) {
-      return next(new AppError(`Error Creating Support`, 500));
-   }
-
    res.status(201).json({
       status: 'success',
       newSupport,
