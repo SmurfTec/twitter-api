@@ -6,7 +6,12 @@ const supportSchema = new mongoose.Schema({
       ref: 'User',
       required: true,
    },
-   Question: {
+   question: {
+      type: String,
+      required: [true, 'Please enter the comment'],
+      trim: true,
+   },
+   answer: {
       type: String,
       required: [true, 'Please enter the comment'],
       trim: true,

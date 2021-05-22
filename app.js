@@ -13,15 +13,14 @@ const globalErrorHandler = require('./middlewares/globalErrorHandler');
 
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
-const dashboardRouter=require('./routers/dashboardRouter')
-
+const dashboardRouter = require('./routers/dashboardRouter');
+const supportRouter = require('./routers/supportRouter');
 
 const AppError = require('./utils/appError');
 
 //view engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 
 app.use(express.json());
 
@@ -31,7 +30,7 @@ console.log(process.env.NODE_ENV);
 app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+   app.use(morgan('dev'));
 }
 
 // $ CORS
@@ -39,9 +38,10 @@ app.use(cors());
 
 //  set limit request from same API in timePeroid from same ip
 const limiter = rateLimit({
-  max: 100, //   max number of limits
-  windowMs: 60 * 60 * 1000, // hour
-  message: ' Too many req from this IP , please Try  again in an Hour ! ',
+   max: 100, //   max number of limits
+   windowMs: 60 * 60 * 1000, // hour
+   message:
+      ' Too many req from this IP , please Try  again in an Hour ! ',
 });
 
 app.use('/api', limiter);
@@ -57,19 +57,21 @@ app.use(xss()); //    protect from molision code coming from html
 
 // testing middleware
 app.use((req, res, next) => {
-  console.log('this is a middleware');
-  next();
+   console.log('this is a middleware');
+   next();
 });
 
 // routes
 app.use('/api/users', userRouter);
-app.use('/api/posts',postRouter);
-app.use('/api/dashboard',dashboardRouter);
-// app.use('/api/support',supportRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/dashboard', dashboardRouter);
+app.use('/api/support', supportRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on the server`, 404));
+   next(
+      new AppError(`Can't find ${req.originalUrl} on the server`, 404)
+   );
 });
 
 // error handling middleware
