@@ -6,20 +6,28 @@ const supportSchema = new mongoose.Schema({
       ref: 'User',
       required: true,
    },
+   status: {
+      type: String,
+      default: 'NOT Answered',
+   },
    question: {
       type: String,
-      required: [true, 'Please enter the comment'],
+      required: [true, 'Please enter the question !'],
       trim: true,
    },
    answer: {
       type: String,
-      required: [true, 'Please enter the comment'],
       trim: true,
    },
    createdAt: {
       type: Date,
       default: Date.now,
    },
+});
+
+supportSchema.pre(/^find/, function (next) {
+   this.sort('-createdAt');
+   next();
 });
 
 module.exports = mongoose.model('Support', supportSchema);

@@ -22,11 +22,14 @@ router.use(protect);
 
 router.route('/me').get(authController.me);
 
-router.route('/').get(userController.getUsers);
-router.route('/feed').get(userController.feed);
 router
    .route('/')
+   .get(userController.getUsers)
+   .post(restrictTo('admin'), userController.addNewUser)
    .patch(restrictTo('user'), userController.updateUser);
+
+router.route('/feed').get(userController.feed);
+
 router
    .route('/:id')
    .get(userController.getUser)
