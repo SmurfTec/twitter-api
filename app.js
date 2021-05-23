@@ -14,7 +14,7 @@ const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const dashboardRouter = require('./routers/dashboardRouter');
-const supportRouter = require('./routers/supportRouter');
+const queryRouter = require('./routers/queryRouter');
 
 const AppError = require('./utils/appError');
 
@@ -38,7 +38,7 @@ app.use(cors());
 
 //  set limit request from same API in timePeroid from same ip
 const limiter = rateLimit({
-   max: 100, //   max number of limits
+   max: 1000, //   max number of limits
    windowMs: 60 * 60 * 1000, // hour
    message:
       ' Too many req from this IP , please Try  again in an Hour ! ',
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/dashboard', dashboardRouter);
-app.use('/api/support', supportRouter);
+app.use('/api/query', queryRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {
