@@ -19,6 +19,24 @@ exports.getUser = catchAsync(async (req, res, next) => {
    });
 });
 
+exports.updateMe = catchAsync(async (req, res, next) => {
+   console.log('req.user._id', req.user._id);
+   const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+   });
+
+   if (!user)
+      return res.status(404).json({
+         status: 'failed',
+         message: `No User found against id ${req.user._id}`,
+      });
+
+   res.status(200).json({
+      status: 'success',
+      user,
+   });
+});
+
 // edited
 exports.addNewUser = catchAsync(async (req, res, next) => {
    const user = await User.create(req.body);
@@ -30,12 +48,10 @@ exports.addNewUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getUsers = catchAsync(async (req, res, next) => {
-   console.log(`user`, req.user.role);
    let query = User.find().select('-password').lean();
    if (req.query.role) query = query.find({ role: req.query.role });
 
    let users = await query;
-   console.log(`users.length`, users.length);
 
    users.forEach((user) => {
       user.isFollowing = false;
@@ -54,7 +70,6 @@ exports.getUsers = catchAsync(async (req, res, next) => {
       (user) => user._id.toString() !== req.user.id
    );
 
-   console.log(`users.length`, users.length);
    //  if (req.user.role === 'admin') {
    //     users = await User.find();
    //     users = users.filter((user) => user.role == 'user');
@@ -69,7 +84,7 @@ exports.getUsers = catchAsync(async (req, res, next) => {
    });
 });
 
-exports.getUser = catchAsync(async (req, res, next) => {
+exports.getUserByUsername = catchAsync(async (req, res, next) => {
    const user = await User.findOne({ username: req.params.username })
       .select('-password')
       .populate({

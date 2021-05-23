@@ -20,7 +20,10 @@ router
 
 router.use(protect);
 
-router.route('/me').get(authController.me);
+router
+   .route('/me')
+   .get(authController.me)
+   .patch(userController.updateMe);
 
 router
    .route('/')
