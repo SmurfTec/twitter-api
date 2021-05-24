@@ -32,6 +32,9 @@ router
    .patch(restrictTo('user'), userController.updateUser);
 
 router.route('/feed').get(userController.feed);
+router
+   .route('/username/:username')
+   .get(userController.getUserByUsername);
 
 router
    .route('/:id')

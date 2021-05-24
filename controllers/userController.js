@@ -4,6 +4,23 @@ const AppError = require('../utils/appError');
 const User = require('../models/User');
 const Post = require('../models/Post');
 
+exports.getUserByUsername = catchAsync(async (req, res, next) => {
+   const user = await User.find({ username: req.params.username });
+
+   if (!user)
+      return next(
+         new AppError(
+            `No User found by username ${req.params.username}`,
+            404
+         )
+      );
+
+   res.status(200).json({
+      status: 'success',
+      user,
+   });
+});
+
 exports.getUser = catchAsync(async (req, res, next) => {
    const user = await User.findById(req.params.id);
 
@@ -13,11 +30,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
          message: `No User found against id ${req.params.id}`,
       });
 
-   console.log('********');
-   console.log('********');
    console.log(`user`, user);
-   console.log('********');
-   console.log('********');
    res.status(200).json({
       status: 'success',
       user,
