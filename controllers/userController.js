@@ -199,16 +199,20 @@ exports.follow = catchAsync(async (req, res, next) => {
       });
    }
 
-   await User.findByIdAndUpdate(req.params.id, {
+   const newUser = await User.findByIdAndUpdate(req.params.id, {
       $push: { followers: req.user.id },
       $inc: { followersCount: 1 },
    });
-   await User.findByIdAndUpdate(req.user.id, {
+   const newLoggedUser = await User.findByIdAndUpdate(req.user._id, {
       $push: { following: req.params.id },
       $inc: { followingCount: 1 },
    });
 
-   res.status(200).json({ success: true, data: {} });
+   res.status(200).json({
+      success: true,
+      newUser,
+      newLoggedUser,
+   });
 });
 
 exports.unfollow = catchAsync(async (req, res, next) => {
