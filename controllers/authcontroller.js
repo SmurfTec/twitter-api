@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const sendMail = require('../utils/email');
 
 const signToken = (user) => {
-   console.log(`user._id`, user._id);
    const id = user._id;
    return jwt.sign({ id }, process.env.JWT_SECRET, {
       // payload + secret + expire time
@@ -140,13 +139,9 @@ exports.confirmMail = catchAsync(async (req, res) => {
 });
 
 exports.me = catchAsync(async (req, res, next) => {
-   const { avatar, username, fullname, email, _id, website, bio } =
-      req.user;
-
-   res.status(200).json({
-      success: true,
-      data: { avatar, username, fullname, email, _id, website, bio },
-   });
+   console.log('req.user._id', req.user._id);
+   req.params.id = req.user._id;
+   next();
 });
 
 // exports.forgotPassword = catchAsync(async (req, res, next) => {

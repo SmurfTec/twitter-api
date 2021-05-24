@@ -22,7 +22,7 @@ router.use(protect);
 
 router
    .route('/me')
-   .get(authController.me)
+   .get(authController.me, userController.getUser)
    .patch(userController.updateMe);
 
 router

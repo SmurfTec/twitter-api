@@ -13,6 +13,11 @@ exports.getUser = catchAsync(async (req, res, next) => {
          message: `No User found against id ${req.params.id}`,
       });
 
+   console.log('********');
+   console.log('********');
+   console.log(`user`, user);
+   console.log('********');
+   console.log('********');
    res.status(200).json({
       status: 'success',
       user,
@@ -319,7 +324,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
    console.log(`req.body`, req.body);
 
    const user = await User.findById(req.params.id);
-   console.log(`user`, user);
 
    const updateUser = await User.findByIdAndUpdate(
       req.user.id,
@@ -332,8 +336,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
    if (!updateUser)
       return next(new AppError(`Error updating User`, 500));
-
-   console.log(updateUser);
 
    res.status(200).json({
       user: updateUser,
@@ -372,7 +374,6 @@ exports.getSupport = catchAsync(async (req, res, next) => {
    users = await User.find();
    users = users.filter((user) => user.role == 'support');
 
-   console.log(users);
    res.status(200).json({
       status: 'success',
       length: users.length,
