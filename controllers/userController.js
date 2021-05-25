@@ -275,11 +275,12 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 
 exports.feed = catchAsync(async (req, res, next) => {
    console.log('FEED');
+   console.log(`req.user`, req.user)
    const following = req.user.following;
 
    const users = await User.find()
       .where('_id')
-      .in(following.concat([req.user.id]))
+      .in(following.concat([req.user._id]))
       .exec();
 
    const postIds = users.map((user) => user.posts).flat();
@@ -327,7 +328,7 @@ exports.feed = catchAsync(async (req, res, next) => {
 
       // is the post belongs to the loggedin user
       post.isMine = false;
-      if (post.user._id.toString() === req.user.id) {
+      if (post.user._id.toString() === req.user._id) {
          post.isMine = true;
       }
 
