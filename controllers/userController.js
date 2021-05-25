@@ -21,6 +21,21 @@ exports.getUserByUsername = catchAsync(async (req, res, next) => {
    });
 });
 
+exports.getUserPosts = catchAsync(async (req, res, next) => {
+   const user = await User.findById(req.params.id);
+
+   if (!user)
+      return res.status(404).json({
+         status: 'failed',
+         message: `No User found against id ${req.params.id}`,
+      });
+
+   console.log(`user`, user);
+   res.status(200).json({
+      status: 'success',
+      user: user.posts || [],
+   });
+});
 exports.getUser = catchAsync(async (req, res, next) => {
    const user = await User.findById(req.params.id);
 
@@ -259,6 +274,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 });
 
 exports.feed = catchAsync(async (req, res, next) => {
+   console.log('FEED');
    const following = req.user.following;
 
    const users = await User.find()

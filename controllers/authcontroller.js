@@ -44,15 +44,9 @@ exports.signup = catchAsync(async (req, res, next) => {
    user.save({ validateBeforeSave: false });
 
    // 4 Send it to Users Email
-   console.log(req.headers.origin);
-   console.log(`activationToken`, activationToken);
-   const activationURL = `http://localhost:6000/api/users/confirmMail/${activationToken}`;
+   const activationURL = `${req.headers.origin}/confirmMail/${activationToken}`;
 
-   // const activationURL = `${req.protocol}://${req.get(
-   //   'host'
-   // )}/confirmMail/${activationToken}`;
-
-   const message = `GO to this link to activate your twitter Account : ${activationURL} .`;
+   const message = `GO to this link to activate your twitter Account : ${activationURL}`;
 
    sendMail({
       email: user.email,
@@ -132,10 +126,7 @@ exports.confirmMail = catchAsync(async (req, res) => {
    user.activationLink = undefined;
    await user.save({ validateBeforeSave: false });
 
-   res.status(200).json({
-      status: 'Success',
-      message: 'Account has been Activated Successfully !',
-   });
+   creatsendToken(user, 200, res);
 });
 
 exports.me = catchAsync(async (req, res, next) => {
