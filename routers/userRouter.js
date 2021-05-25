@@ -39,7 +39,6 @@ router
 router
    .route('/:id')
    .get(userController.getUser)
-
    .delete(restrictTo('admin'), userController.deleteUser);
 router.route('/:id/posts').get(userController.getUserPosts);
 router.route('/:id/follow').get(userController.follow);

@@ -380,8 +380,14 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-   const user = await User.findByIdAndDelete(req.params.id);
+   // *  Delete ALl Posts did by this user
+   const posts = await Post.deleteMany({ user: req.params.id });
+   if (!posts) {
+      console.log(`No Posts were posted by this Idiot user`);
+   }
 
+   // * Delete This user
+   const user = await User.findByIdAndDelete(req.params.id);
    if (!user) {
       return next(
          new AppError(
