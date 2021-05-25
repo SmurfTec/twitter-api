@@ -275,7 +275,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 
 exports.feed = catchAsync(async (req, res, next) => {
    console.log('FEED');
-   console.log(`req.user`, req.user)
+   //  console.log(`req.user`, req.user)
    const following = req.user.following;
 
    const users = await User.find()
@@ -301,7 +301,7 @@ exports.feed = catchAsync(async (req, res, next) => {
       .lean()
       .exec();
 
-   posts.forEach((post) => {
+   posts.map((post) => {
       // is the loggedin user liked the post
       post.isLiked = false;
       const likes = post.likes.map((like) => like.toString());
@@ -327,6 +327,7 @@ exports.feed = catchAsync(async (req, res, next) => {
       }
 
       // is the post belongs to the loggedin user
+      console.log(`post`, post);
       post.isMine = false;
       if (post.user._id.toString() === req.user._id) {
          post.isMine = true;
@@ -339,6 +340,8 @@ exports.feed = catchAsync(async (req, res, next) => {
             comment.isCommentMine = true;
          }
       });
+
+      return post;
    });
 
    res.status(200).json({ success: true, data: posts });
